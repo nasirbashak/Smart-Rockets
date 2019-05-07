@@ -18,6 +18,7 @@ private:
     int size;
     bool completed;
     bool crashed;
+    int number;
   
     
 
@@ -42,7 +43,7 @@ public:
     void init();
     void applyForce(PVector f);
     void init(int x, int y,int ySpeed);
-    void show();
+    void show(int);
     void update();
     void drawPath(PVector);
     Rocket copy(Rocket r);

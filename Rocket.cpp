@@ -20,13 +20,13 @@ extern float obstacleY ;
 }
 Rocket :: Rocket(DNA d){
 
-    pos = PVector(1000 / 2, 200);
+    pos = PVector(1000 / 2, 20);
     vel = PVector(0,0);
     vel = vel.random2D();
     //printf("velocity1 = %d,%d\n",vel.x,vel.y);
     vel.setMag(0.2);
     acc = PVector(0, 0);
-    size= 15;
+    size= 10;
 
 
 
@@ -35,6 +35,12 @@ Rocket :: Rocket(DNA d){
 }
 
 Rocket :: Rocket(const Rocket &cpy){
+      this->pos = cpy.pos;
+    this->vel = cpy.vel;
+    this->acc = cpy.acc;
+    this->size = cpy.size;
+    this->fitness = cpy.fitness;
+    
      this->Dna = cpy.Dna;
         
 }
@@ -54,10 +60,11 @@ Rocket Rocket:: copy(Rocket r){
     this->pos = PVector(1000 / 2, 20);
     this->vel = PVector(0,0);
     this->vel = vel.random2D();
+    this->fitness = r.fitness;
     //printf("velocity1 = %d,%d\n",vel.x,vel.y);
     this->vel.setMag(0.2);
     this->acc = PVector(0, 0);
-    this->size= 15;
+    this->size= 10;
     this->Dna = r.Dna;
 }
 
@@ -69,7 +76,7 @@ void Rocket :: init(){
     //printf("velocity1 = %d,%d\n",vel.x,vel.y);
     vel.setMag(0.2);
     acc = PVector(0, 0);
-    size= 15;
+    size= 10;
     completed = false;
     Dna.init();
 
@@ -168,7 +175,7 @@ void Rocket :: init(int x,int y,int ySpeed){
 }
 
 
-void Rocket :: show(){
+void Rocket :: show(int number){
 
    //  printf("position = %d ,%d \n",pos.x,pos.y);
 
@@ -177,7 +184,9 @@ void Rocket :: show(){
     glRotatef(vel.heading()*10,1,1,1);
    
     //printf("head = %f\n",vel.heading());
-
+     
+    
+      
 
 
      //nose section
@@ -237,8 +246,8 @@ void Rocket :: show(){
     glBegin(GL_QUADS);
         glVertex2f(0,0);
         glVertex2f(0,0-2*size);
-        glVertex2f(0+size,0-2*size);
-        glVertex2f(0+size,0);
+        glVertex2f(0+(size),0-2*size);
+        glVertex2f(0+(size),0);
     glEnd();
 
     if (!completed && !crashed) {
@@ -281,6 +290,15 @@ void Rocket :: show(){
       glPopMatrix();
     }
 
+    // displing rocket number
+     glColor3f(1,0,0);
+          char c[10];
+     sprintf(c,"%d",number);
+
+     glRasterPos3f(0, -1.5*size, 0);
+	  for(int i = 0; c[i] != '\0'; i++)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
+
 
 
 
@@ -307,7 +325,7 @@ float Rocket :: calcFittness(PVector target){
     }
     //printf("\nvelocity in calcF = %f,%f\n",vel.x,vel.y);
 
-     //printf("d and fitness %f , %f\n",d,fitness);
+     printf("d and fitness %f , %f\n",d,fitness);
 
     return fitness;
 }

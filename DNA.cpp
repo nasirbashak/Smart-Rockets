@@ -47,7 +47,7 @@ void DNA::init(){
      // gene.x*=10;
       //gene.y*=10;
       gene.setMag(maxforce);    
-      printf("%d Genes = %f,%f\n",i,gene.x,gene.y);    
+     // printf("%d Genes = %f,%f\n",i,gene.x,gene.y);    
       genes[i] = gene;
     }
 

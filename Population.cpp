@@ -34,7 +34,7 @@ void Population:: init(){
 
 void Population ::show(){
     for(int i=0;i<populationSize;i++){
-        rockets[i].show();
+        rockets[i].show(i);
     }
 }
 
@@ -71,7 +71,7 @@ float Population :: evaluate(PVector target){
     for(int i=0;i<populationSize;i++){
     //for (Rocket rocket : rockets) {
       rockets[i].fitness /= maxfit;
-     // printf("%d fitness= %f\n",(c++), rockets[i].fitness);
+     // printf("%d fitness of rockets = %f\n",(c++), rockets[i].fitness);
 
     }
 
@@ -82,19 +82,52 @@ float Population :: evaluate(PVector target){
     //for (Rocket rocket : rockets) {
         for(int i=0;i<populationSize;i++){
 
-      float n = rockets[i].fitness * 100;
+      int n = rockets[i].fitness * 100;
+      float f = rockets[i].fitness;
+      if(f!=(float)1){
+        continue;
+      }
+
+       printf("%d Original rocket fitness = %f\n",i,f);
      // printf("n = %f\n",n);
       
       for (int j = 0; j < n; j++) {
       //  matingPool[index++] 
-        Rocket r = rockets[i];
-        matingPool[(index++)].copy(r);
+        Rocket r = Rocket(rockets[i]);
+        //r = r.copy(rockets[i]);
+
+        //matingPool[(index++)].copy(r);
+        //matingPool[(index++)] = Rocket(r);
+        matingPool[(index++)] = Rocket(rockets[i]);
+
 
        /// printf("j = %d\n",j);
-       // printf("%d matingpool = %f\n",index,matingPool[(index++)]);
+      // printf("%d Selected rocket fitness = %f\n",j,r.fitness);
+
+        Rocket r2 = Rocket(matingPool[index]);
+        float f = r2.pos.x;
+
+      //  printf("%d matingpool pos.x = %f\n",index,f);
         
       }
     }
+
+    for(int i=0;i<index ;i++){
+
+        Rocket r1 = Rocket(matingPool[i]);
+        Rocket r2 = matingPool[i];
+
+   // printf("%d Rocket pos in constructor = %f,%f\n",i,r1.pos.x,r1.pos.y);
+   // printf("%d Rocket pos without constructor = %f,%f\n",i,r2.pos.x,r2.pos.y);
+
+   // printf("%d Rocket fitness in constructor = %f\n",i,r1.fitness);
+   // printf("%d Rocket fitness without constructor = %f\n",i,r2.fitness);
+
+
+
+    }
+
+
 
     //printf("avgfit return val = %f\n",avgfit);
 
@@ -134,17 +167,25 @@ void Population ::selection() {
       DNA child = parentA.crossover(parentB);
      // printf("%d child dna = %f,%f\n",i,child.genes[i].x,child.genes[i].y);
       child.mutation();
-      newRockets[i].copy(Rocket(child));
+      //newRockets[i].copy(Rocket(child));
+      newRockets[i] =Rocket(child);
+
     //  printf("i and popS %d,%d\n",i,populationSize);
       //printf("newRocket[%d] = %f,%f\n",i,newRockets[i].pos.x,newRockets[i].pos.y);
     }
 
-   // delete []matingPool;
+    //delete []matingPool;
 
     for(int i=0;i<populationSize;i++){
 
     this->rockets[i].copy(newRockets[i]);
-    //  printf("Rocket[%d] = %f,%f\n",i,rockets[i].pos.x,rockets[i].pos.y);
+    //this->rockets[i] = Rocket(newRockets[i]);
+
+      for(PVector p : rockets[i].Dna.genes ){
+       // printf("%d Rocket genes = %f,%f\t",i,p.x,p.y);
+      }
+      //  printf("\n");
+      //printf("Rocket[%d] = %f,%f\n",i,rockets[i].Dna.genes[0].x,rockets[i].Dna.genes[0].y);
     }
   }
 
