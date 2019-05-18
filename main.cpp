@@ -1,12 +1,16 @@
-
 #include<stdlib.h>
 #include<GL/glut.h> 
 #include<stdio.h>
 #include "Population.h"
 #include"PApplet.h"
 
+
+
 int age;
 int lifeSpan = 500;
+int generations = 1;
+int deadRockets = 0;
+int populationSize =  20;
 Population population;
 
 float obstacleWidth = 200;
@@ -22,7 +26,12 @@ PVector target(500,550);
 
 int x = 100;
 int y = 100;
-int size = 50;
+int size = 15;
+
+bool showNumber = false;
+
+Obstacle rect(obstacleX,obstacleY);
+
 
 
 
@@ -40,6 +49,24 @@ void init(){
     target.add(500,550);
     population.init();
 
+    //PlaySound(TEXT("recycle.wav"), NULL, SND_FILENAME);
+   // PlaySound("audio.mp4",NULL,SND_FILENAME);
+
+}
+
+void renderBitmap(float x , float y, void *font, char *string){
+    char *c;
+    glRasterPos2f(x,y);
+    for(int i = 0; c[i] != '\0'; i++){
+	    glutBitmapCharacter(font, c[i]);
+    }
+}
+
+void drawText(char *str,float x,float y){
+    glColor3f(1.f,1.f,1.f);
+    char buf[100] = {0};
+    sprintf(buf,str);
+    renderBitmap(x,y,GLUT_BITMAP_TIMES_ROMAN_24,buf);
 }
 
 
@@ -89,6 +116,33 @@ void drawTarget(){
 
 }
 
+void text(int message,float x,float y, float z){
+         
+            glColor3f(1,1,1);
+            char c[100];
+            sprintf(c,"%d",message);
+            glRasterPos2f(x, y);
+            for(int i = 0; c[i] != '\0'; i++){
+		        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c[i]);
+            }
+
+}
+
+void text(char *message,float x,float y, float z){
+
+            glColor3f(1,1,1);
+            char c[100];
+            sprintf(c,"%s",message);
+        
+            glRasterPos2f(x, y);
+           
+            for(int i = 0; c[i] != '\0'; i++){
+		        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c[i]);
+            }
+
+}
+
+
 void draw(){
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -97,8 +151,18 @@ void draw(){
     drawTargetPlanet();
     glLineWidth(1);
     // drawTarget();
-    drawObstacle();
+    //drawObstacle();
+    rect.show();
+    rect.update();
     population.show();
+    deadRockets = population.deadRockets;
+    text(deadRockets,200,300,10);
+    text("Generations : ",10,HEIGHT-25,10);
+    text(generations,150,HEIGHT-25,10);
+
+    text("Age : ",10,HEIGHT-50,10);
+    text(age,75,HEIGHT-50,10);
+
     glFlush();
     glutSwapBuffers();
     glutPostRedisplay();
@@ -109,17 +173,20 @@ void timer(int t){
        
     for(int i=0;i<1;i++){
 
-        population.update();
+        population.update(rect);
         age++;
+       
         if(age >lifeSpan){
     
             printf("age reached %d\n",age);
             age=0;
+            generations++;
+           
             population.~Population();
             population.evaluate(PVector(500,550));
             population.selection();
 
-             }
+        }
     }
     draw();
     glutTimerFunc(1000/60,timer,0);
@@ -135,6 +202,27 @@ void keys(unsigned char key , int x, int y)
 
 }
 
+void myMenu(int option){
+    switch(option){
+        
+        case 1:
+                showNumber = true;
+                break;
+        case 2:
+                showNumber = false;
+                break;
+        case 3:
+                rect.move() ;
+                break;
+        case 4: 
+                rect.stop() ;
+                
+                break;
+
+    }
+
+}
+
 int main(int argc , char ** args){
 
     glutInit(&argc,args);
@@ -143,10 +231,16 @@ int main(int argc , char ** args){
     glutInitWindowSize(WIDTH,HEIGHT);
     glutCreateWindow("Smart Rockets");
     init();
-
+     system("audio.mp4");
     glutDisplayFunc(draw);
     glutTimerFunc(0,timer,0);
     glutKeyboardFunc(keys);
+    glutCreateMenu(myMenu);
+    glutAddMenuEntry("RocketNumber On",1);
+    glutAddMenuEntry("RocketNumber Off",2);
+    glutAddMenuEntry("Move Obstacle",3);
+    glutAddMenuEntry("Stop Obstacle",4);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     glutMainLoop();
 

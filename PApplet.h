@@ -7,7 +7,6 @@ const int HEIGHT = 600;
 
 
 
-
 /*
 
  float sq(float n) {

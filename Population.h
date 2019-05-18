@@ -1,8 +1,5 @@
 #include"Rocket.h"
 
-//explicit int targetX ;
-//explicit int targetY ;
-
 
 class Population{
     private:
@@ -10,12 +7,12 @@ class Population{
         Rocket rockets[20];
         Rocket *matingPool;
     public:
-
+        int deadRockets;
         Population();
         ~Population();
         void init();
         void show();
-        void update();
+        void update(Obstacle);
         float evaluate(PVector target);
         void selection();
 

@@ -10,190 +10,173 @@ extern float obstacleWidth ;
 extern float obstacleHeight ;
 extern float obstacleX ;
 extern float obstacleY ;
+extern bool showNumber;
 
 
+Rocket :: Rocket(){
 
+     DNA Dna;        
 
- Rocket :: Rocket(){
-     DNA Dna;
-        
 }
+
 Rocket :: Rocket(DNA d){
 
     pos = PVector(1000 / 2, 20);
     vel = PVector(0,0);
     vel = vel.random2D();
-    //printf("velocity1 = %d,%d\n",vel.x,vel.y);
     vel.setMag(0.2);
     acc = PVector(0, 0);
     size= 10;
-
-
-
-     this->Dna= d;
+    this->Dna= d;
         
 }
 
 Rocket :: Rocket(const Rocket &cpy){
-      this->pos = cpy.pos;
+   
+    this->pos = cpy.pos;
     this->vel = cpy.vel;
     this->acc = cpy.acc;
     this->size = cpy.size;
-    this->fitness = cpy.fitness;
-    
-     this->Dna = cpy.Dna;
+    this->fitness = cpy.fitness; 
+    this->Dna = cpy.Dna;
         
 }
 
-
 Rocket :: ~Rocket(){
+    
     completed = false;
     crashed = false;
     Dna.~DNA();
+
 }
 
 Rocket Rocket:: copy(Rocket r){
-    //this->pos = r.pos;
-    //this->vel = r.vel;
-    //this->acc = r.acc;
-    //this->size = r.size;
+
     this->pos = PVector(1000 / 2, 20);
     this->vel = PVector(0,0);
     this->vel = vel.random2D();
     this->fitness = r.fitness;
-    //printf("velocity1 = %d,%d\n",vel.x,vel.y);
     this->vel.setMag(0.2);
     this->acc = PVector(0, 0);
     this->size= 10;
     this->Dna = r.Dna;
+
 }
 
 
 void Rocket :: init(){
+
     pos = PVector(1000 / 2, 20);
     vel = PVector(0,0);
     vel = vel.random2D();
-    //printf("velocity1 = %d,%d\n",vel.x,vel.y);
     vel.setMag(0.2);
     acc = PVector(0, 0);
     size= 10;
     completed = false;
     Dna.init();
 
-   // printf("velocity2 = %f,%f\n",vel.x,vel.y);
-
-
-
 }
-
-
-
 
 void Rocket :: applyForce(PVector force){
+  
     acc.add(force);
+
 }
 
-
 float sq(float n) {
+
     return n*n;
+
   }
 
 float dist(float x1, float y1, float x2, float y2) {
+  
     return sqrt(sq(x2-x1) + sq(y2-y1)); 
-  }
+  
+}
 
-  float map(float value, float istart, float istop, float ostart, float ostop) {
+float map(float value, float istart, float istop, float ostart, float ostop) {
+
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-  }
+
+}
 
 void Rocket :: drawPath(PVector p){
 
-
-  glColor3f(0.0,1.0,0.0);
-  glPointSize(50);
-  glBegin(GL_POINTS);
-    glVertex2f(p.x,p.y);
-    glVertex2f(p.x+10,p.y+10);
-    printf("pos = %f,%f\n",p.x,p.y);
-  glEnd();
+    glColor3f(0.0,1.0,0.0);
+    glPointSize(50);
+    glBegin(GL_POINTS);
+        glVertex2f(p.x,p.y);
+        glVertex2f(p.x+10,p.y+10);
+        printf("path of rocket = %f,%f\n",p.x,p.y);
+    glEnd();
 
 
 
 }
 
-
-void Rocket :: update(){
-
-  //printf("Obstacle Width = %f\n",obstacleWidth);
+void Rocket :: update(Obstacle rect){
 
     applyForce(Dna.genes[age]);
-    
 
-  float d = dist(this->pos.x,this->pos.y,500,550);
-  if(d<50){
-    this->completed = true;
-    this->pos.x = 500;
-    this->pos.y = 550;
-  }
+    float d = dist(this->pos.x,this->pos.y,500,550);
+    if(d<50){
+      this->completed = true;
+      this->pos.x = 500;
+      this->pos.y = 550;
+    }
 
-  if(this->pos.x<0 || this->pos.x >WIDTH- this->size || this->pos.y <0 || this->pos.y > HEIGHT){
-    this->crashed = true;
+    if(this->pos.x<0 || this->pos.x >WIDTH- this->size || this->pos.y <0 || this->pos.y > HEIGHT){
+      this->crashed = true;
+     
+    }
 
-  }
+    //if( this->pos.x>=obstacleX && this->pos.x<= obstacleX+obstacleWidth &&  this->pos.y>=obstacleY-obstacleHeight && this->pos.y<=obstacleY){
+     // this->crashed = true;
+         
+   // }
 
-  if( this->pos.x>=obstacleX && this->pos.x<= obstacleX+obstacleWidth &&  this->pos.y>=obstacleY-obstacleHeight && this->pos.y<=obstacleY){
-    this->crashed = true;
-  }
-
-
-
-
-
+    if( this->pos.x>=rect.x && this->pos.x<= rect.x+rect.width &&  this->pos.y>=rect.y-rect.height && this->pos.y<=rect.y){
+      this->crashed = true;
+      printf("HIT\n");
+         
+    }
 
     if(!completed && !crashed){
       vel.add(acc);
       pos.add(vel);
       acc.mult(0);
-     
-
     }
 
-    
 }
 
-
-
-
 void Rocket :: init(int x,int y,int ySpeed){
+
     this->x = rand()%100;//random(1000);//
     this->y = 0;
     this->ySpeed = rand()%5;//random(5);//
     this->xSpeed = rand()%5;//random(5);//
     this->size=15;
 
-
 }
 
-
 void Rocket :: show(int number){
-
-   //  printf("position = %d ,%d \n",pos.x,pos.y);
-
-    glPushMatrix();
+  
+      glPushMatrix();
         glTranslatef(pos.x,pos.y,pos.z);
         glRotatef(vel.heading()*10,1,1,1);
    
         //printf("head = %f\n",vel.heading());
         //nose section
 
-          float noseR = map(165,0,255,0,1);
-          float noseG = map(42,0,255,0,1);
-          float noseB = map(42,0,255,0,1);  
+        float noseR = map(165,0,255,0,1);
+        float noseG = map(42,0,255,0,1);
+        float noseB = map(42,0,255,0,1);  
 
 
           //fill(165, 42, 42);
           //glColor3f(1.0,0.5,1.0);
-          glColor3f(noseR,noseG,noseB);
+        glColor3f(noseR,noseG,noseB);
 
         glBegin(GL_TRIANGLES);
             glVertex2f(0+size/2,0+size/1.5);
@@ -271,20 +254,18 @@ void Rocket :: show(int number){
             }
 
             // displing rocket number
-            glColor3f(1,0,0);
-            char c[10];
-            sprintf(c,"%d",number);
-            glRasterPos3f(0, -1.5*size, 0);
-	          for(int i = 0; c[i] != '\0'; i++)
-		            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
+            if(showNumber){
+                glColor3f(1,0,0);
+                char c[10];
+                sprintf(c,"%d",number+1);
+                glRasterPos3f(0, -1.5*size, 0);
+	            for(int i = 0; c[i] != '\0'; i++)
+		                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
+            }
 
     glPopMatrix();
 
 }
-
-
-
-
 
 float Rocket :: calcFittness(PVector target){
 
@@ -305,12 +286,3 @@ float Rocket :: calcFittness(PVector target){
 
     return fitness;
 }
-
-
-
-
-
-
-
-
-
