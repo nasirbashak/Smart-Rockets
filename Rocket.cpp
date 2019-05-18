@@ -180,129 +180,105 @@ void Rocket :: show(int number){
    //  printf("position = %d ,%d \n",pos.x,pos.y);
 
     glPushMatrix();
-    glTranslatef(pos.x,pos.y,pos.z);
-    glRotatef(vel.heading()*10,1,1,1);
+        glTranslatef(pos.x,pos.y,pos.z);
+        glRotatef(vel.heading()*10,1,1,1);
    
-    //printf("head = %f\n",vel.heading());
-     
-    
-      
+        //printf("head = %f\n",vel.heading());
+        //nose section
+
+          float noseR = map(165,0,255,0,1);
+          float noseG = map(42,0,255,0,1);
+          float noseB = map(42,0,255,0,1);  
 
 
-     //nose section
+          //fill(165, 42, 42);
+          //glColor3f(1.0,0.5,1.0);
+          glColor3f(noseR,noseG,noseB);
 
-      float noseR = map(165,0,255,0,1);
-      float noseG = map(42,0,255,0,1);
-      float noseB = map(42,0,255,0,1);  
+        glBegin(GL_TRIANGLES);
+            glVertex2f(0+size/2,0+size/1.5);
+            glVertex2f(0+size/2-size/1.5,0);
+            glVertex2f(0+size/2+size/1.5,0);
+        glEnd();
 
-
-     //fill(165, 42, 42);
-    //glColor3f(1.0,0.5,1.0);
-    glColor3f(noseR,noseG,noseB);
-
-    glBegin(GL_TRIANGLES);
-        glVertex2f(0+size/2,0+size/1.5);
-        glVertex2f(0+size/2-size/1.5,0);
-        glVertex2f(0+size/2+size/1.5,0);
-
-    glEnd();
-
-    //body section
-    
-
+        //body section
+  
          if (completed) {
-      //fill(50, 205, 50);
+          //fill(50, 205, 50);
+              float bodyR = map(50,0,255,0,1);
+              float bodyG = map(205,0,255,0,1);
+              float bodyB = map(50,0,255,0,1);  
+              glColor3f(bodyR,bodyG,bodyB);
+          } else if (crashed) {
+          //fill(128, 128, 128);
+              float bodyR = map(50,0,255,0,1);
+              float bodyG = map(50,0,255,0,1);
+              float bodyB = map(50,0,255,0,1); 
+              glColor3f(bodyR,bodyG,bodyB);
+          } else {
+          //fill(255, 150);
+              float bodyR = map(255,0,255,0,1);
+              float bodyG = map(255,0,255,0,1);
+              float bodyB = map(255,0,255,0,1);
+              float bodyA = map(150,0,255,0,1); 
+              glColor3f(bodyR,bodyG,bodyB);
+          // glClearColor(bodyR,bodyG,bodyB,bodyA);
+          }
 
-      float bodyR = map(50,0,255,0,1);
-      float bodyG = map(205,0,255,0,1);
-      float bodyB = map(50,0,255,0,1);  
-       glColor3f(bodyR,bodyG,bodyB);
-
-    } else if (crashed) {
-      //fill(128, 128, 128);
-
-      float bodyR = map(50,0,255,0,1);
-      float bodyG = map(50,0,255,0,1);
-      float bodyB = map(50,0,255,0,1); 
-
-       glColor3f(bodyR,bodyG,bodyB);
-
-    } else {
-      //fill(255, 150);
-
-       float bodyR = map(255,0,255,0,1);
-      float bodyG = map(255,0,255,0,1);
-      float bodyB = map(255,0,255,0,1);
-      float bodyA = map(150,0,255,0,1); 
-
-       glColor3f(bodyR,bodyG,bodyB);
-      // glClearColor(bodyR,bodyG,bodyB,bodyA);
-    }
-
-
-
-    //glColor3f(0.0,0.0,1.0);
+          //glColor3f(0.0,0.0,1.0);
    
-    glBegin(GL_QUADS);
-        glVertex2f(0,0);
-        glVertex2f(0,0-2*size);
-        glVertex2f(0+(size),0-2*size);
-        glVertex2f(0+(size),0);
-    glEnd();
+          glBegin(GL_QUADS);
+              glVertex2f(0,0);
+              glVertex2f(0,0-2*size);
+              glVertex2f(0+(size),0-2*size);
+              glVertex2f(0+(size),0);
+          glEnd();
 
-    if (!completed && !crashed) {
+          if (!completed && !crashed) {
+              glPushMatrix();
+                  glTranslatef(0,-4*size,0);
+                  glRotatef(180,1,0,0);
+                  //fill(255, 140 + random(0, 115), random(0, 128));
 
-      glPushMatrix();
-      glTranslatef(0,-4*size,0);
-       glRotatef(180,1,0,0);
-
-      //fill(255, 140 + random(0, 115), random(0, 128));
-
-          int tempGreen = 140+rand()%115;
-          int tempBlue = rand()%128; 
+                  int tempGreen = 140+rand()%115;
+                  int tempBlue = rand()%128; 
       
-        float thrustR = map(255,0,255,0,1);
-        float thrustG = map(tempGreen,0,255,0,1);
-        float thrustB = map(tempBlue,0,255,0,1);      
+                  float thrustR = map(255,0,255,0,1);
+                  float thrustG = map(tempGreen,0,255,0,1);
+                  float thrustB = map(tempBlue,0,255,0,1);      
 
-
-      // draw thrust flame
-        //glColor3f(0.5,0.0,0.0);
-         glColor3f(thrustR,thrustG,thrustB);
+                  // draw thrust flame
+                  //glColor3f(0.5,0.0,0.0);
+                  glColor3f(thrustR,thrustG,thrustB);
       
-      glBegin(GL_TRIANGLE_STRIP);
-         // glVertex2f(-14, -3);
-         // glVertex2f(-35, 0);
-         // glVertex2f(-14, 3);
-        glVertex2f(0,-2*size);
-        glVertex2f(0+size/2,-2*size);
-        glVertex2f(0+size/4,-size/2);
+                  glBegin(GL_TRIANGLE_STRIP);
+                        // glVertex2f(-14, -3);
+                        // glVertex2f(-35, 0);
+                        // glVertex2f(-14, 3);
+                        glVertex2f(0,-2*size);
+                        glVertex2f(0+size/2,-2*size);
+                        glVertex2f(0+size/4,-size/2);
+                  glEnd();
 
+                  glBegin(GL_TRIANGLE_STRIP);
+                        glVertex2f(0+size/2,-2*size);
+                        glVertex2f(0+size,-2*size);
+                        glVertex2f(0+3*size/4,-size/2);
+                  glEnd();
       
-      glEnd();
+                glPopMatrix();
+    
+            }
 
-      glBegin(GL_TRIANGLE_STRIP);
-        glVertex2f(0+size/2,-2*size);
-        glVertex2f(0+size,-2*size);
-        glVertex2f(0+3*size/4,-size/2);
-     
-      glEnd();
-      glPopMatrix();
-    }
+            // displing rocket number
+            glColor3f(1,0,0);
+            char c[10];
+            sprintf(c,"%d",number);
+            glRasterPos3f(0, -1.5*size, 0);
+	          for(int i = 0; c[i] != '\0'; i++)
+		            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
 
-    // displing rocket number
-     glColor3f(1,0,0);
-          char c[10];
-     sprintf(c,"%d",number);
-
-     glRasterPos3f(0, -1.5*size, 0);
-	  for(int i = 0; c[i] != '\0'; i++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
-
-
-
-
-     glPopMatrix();
+    glPopMatrix();
 
 }
 
