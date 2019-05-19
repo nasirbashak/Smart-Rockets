@@ -11,6 +11,7 @@ int lifeSpan = 500;
 int generations = 1;
 int deadRockets = 0;
 int populationSize =  20;
+int winningRockets = 0;
 Population population;
 
 float obstacleWidth = 200;
@@ -24,6 +25,8 @@ int targetSize = 50;
 
 PVector target(500,550);
 
+PVector stars[100];
+
 int x = 100;
 int y = 100;
 int size = 15;
@@ -32,13 +35,38 @@ bool showNumber = false;
 
 Obstacle rect(obstacleX,obstacleY);
 
+float mapp(float value, float istart, float istop, float ostart, float ostop) {
 
+    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 
+}
+
+void background(float r,float g,float b){
+    float spaceR = mapp(r,0,255,0,1);
+    float spaceG = mapp(g,0,255,0,1);
+    float spaceB = mapp(b,0,255,0,1);
+
+    glClearColor(spaceR,spaceG,spaceB,1.0);
+
+}
+
+void createSpace(){
+
+    for(int i=0;i<100;i++){
+
+        float x = rand()%WIDTH;
+        float y = rand()%HEIGHT;
+        float z = rand()%100;
+        stars[i].add(PVector(x,y,z));
+
+    }
+
+}
 
 void init(){
 
-    glClearColor(0.5,0.5,0.5,1.0);
-
+    //glClearColor(0.5,0.5,0.5,1.0);
+    background(0,59,89);
     glColor3f(0.0,0.0,1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -48,11 +76,38 @@ void init(){
     lifeSpan = 500;
     target.add(500,550);
     population.init();
+    createSpace();
 
     //PlaySound(TEXT("recycle.wav"), NULL, SND_FILENAME);
    // PlaySound("audio.mp4",NULL,SND_FILENAME);
 
 }
+
+
+
+void drawSpace(){
+
+  
+    float spaceR = mapp(255,0,255,0,1);
+    float spaceG = mapp(255,0,255,0,1);
+    float spaceB = mapp(255,0,255,0,1);
+
+    glColor3f(spaceR,spaceG,spaceB);
+    glPointSize((int)rand()%3);
+    
+        glBegin(GL_POINTS);
+            for(int i=0;i<100;i++){
+                glVertex3f(stars[i].x,stars[i].y,stars[i].z);
+            }
+        glEnd();
+  
+
+
+
+
+
+}
+
 
 void renderBitmap(float x , float y, void *font, char *string){
     char *c;
@@ -146,7 +201,7 @@ void text(char *message,float x,float y, float z){
 void draw(){
 
     glClear(GL_COLOR_BUFFER_BIT);
-
+    drawSpace();
     drawEarth();
     drawTargetPlanet();
     glLineWidth(1);
@@ -155,8 +210,7 @@ void draw(){
     rect.show();
     rect.update();
     population.show();
-    deadRockets = population.deadRockets;
-    text(deadRockets,200,300,10);
+    
     text("Generations : ",10,HEIGHT-25,10);
     text(generations,150,HEIGHT-25,10);
 
@@ -231,7 +285,6 @@ int main(int argc , char ** args){
     glutInitWindowSize(WIDTH,HEIGHT);
     glutCreateWindow("Smart Rockets");
     init();
-     system("audio.mp4");
     glutDisplayFunc(draw);
     glutTimerFunc(0,timer,0);
     glutKeyboardFunc(keys);
@@ -244,4 +297,4 @@ int main(int argc , char ** args){
 
     glutMainLoop();
 
-}
+} 

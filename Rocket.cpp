@@ -11,6 +11,7 @@ extern float obstacleHeight ;
 extern float obstacleX ;
 extern float obstacleY ;
 extern bool showNumber;
+extern int winningRockets;
 
 
 Rocket :: Rocket(){
@@ -24,7 +25,7 @@ Rocket :: Rocket(DNA d){
     pos = PVector(1000 / 2, 20);
     vel = PVector(0,0);
     vel = vel.random2D();
-    vel.setMag(0.2);
+    vel.setMag(0.5);
     acc = PVector(0, 0);
     size= 10;
     this->Dna= d;
@@ -124,8 +125,10 @@ void Rocket :: update(Obstacle rect){
       this->completed = true;
       this->pos.x = 500;
       this->pos.y = 550;
+      winningRockets++;
     }
-
+    
+    //boundary condition
     if(this->pos.x<0 || this->pos.x >WIDTH- this->size || this->pos.y <0 || this->pos.y > HEIGHT){
       this->crashed = true;
      
@@ -137,8 +140,8 @@ void Rocket :: update(Obstacle rect){
    // }
 
     if( this->pos.x>=rect.x && this->pos.x<= rect.x+rect.width &&  this->pos.y>=rect.y-rect.height && this->pos.y<=rect.y){
+      
       this->crashed = true;
-      printf("HIT\n");
          
     }
 
@@ -255,7 +258,11 @@ void Rocket :: show(int number){
 
             // displing rocket number
             if(showNumber){
-                glColor3f(1,0,0);
+                if(crashed){
+                    glColor3f(1,0,0);
+                }else{
+                    glColor3f(0,0,1);
+                }
                 char c[10];
                 sprintf(c,"%d",number+1);
                 glRasterPos3f(0, -1.5*size, 0);
@@ -282,7 +289,7 @@ float Rocket :: calcFittness(PVector target){
     }
     //printf("\nvelocity in calcF = %f,%f\n",vel.x,vel.y);
 
-     printf("d and fitness %f , %f\n",d,fitness);
+     //printf("d and fitness %f , %f\n",d,fitness);
 
     return fitness;
 }

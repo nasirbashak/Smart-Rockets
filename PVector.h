@@ -22,11 +22,11 @@ class PVector{
         PVector limit(float n);
         float heading();
         PVector setMag(float n);
-         PVector fromAngle(float angle );
+        PVector fromAngle(float angle );
         PVector set(float x , float y);
         PVector set(float x , float y , float z);
         PVector set(PVector v);
-         PVector random2D();
+        PVector random2D();
 
 
 

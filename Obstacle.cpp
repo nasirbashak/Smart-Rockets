@@ -12,9 +12,20 @@ Obstacle :: Obstacle(int x,int y){
     moving = false;
 }
 
+float mappp(float value, float istart, float istop, float ostart, float ostop) {
+
+    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+
+}
+
+
 void Obstacle:: show(){
 
-    glColor3f(1.0,0.0,0.0);
+    float bodyR = mappp(255,0,255,0,1);
+    float bodyG = mappp(179,0,255,0,1);
+    float bodyB = mappp(0,0,255,0,1); 
+    glColor3f(bodyR,bodyG,bodyB);
+
     glBegin(GL_QUADS);
         glVertex2f(this->x                ,     this->y);
         glVertex2f(this->x                ,    this->y-(this->height));

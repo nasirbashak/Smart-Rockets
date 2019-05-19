@@ -6,7 +6,7 @@ class DNA{
 
     private:
     
-        float maxforce = 0.2;
+        float maxforce = 0.5;
 
         
     public:
@@ -16,7 +16,7 @@ class DNA{
         DNA(PVector p[],int n);
         ~DNA();
         void init();
-        void  mutation();
+        void mutation();
         DNA crossover(DNA d);
 
 };
