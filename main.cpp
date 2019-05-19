@@ -183,9 +183,10 @@ void text(int message,float x,float y, float z){
 
 }
 
-void text(char *message,float x,float y, float z){
+void text(char *message,float x,float y, float z,float *color){
 
-            glColor3f(1,1,1);
+            
+            glColor3fv(color);
             char c[100];
             sprintf(c,"%s",message);
         
@@ -207,14 +208,14 @@ void draw(){
     glLineWidth(1);
     // drawTarget();
     //drawObstacle();
-    rect.show();
+    rect.show("Smart Rockets");
     rect.update();
     population.show();
-    
-    text("Generations : ",10,HEIGHT-25,10);
+    float textColor[] = {1.0,1.0,1.0};
+    text("Generations : ",10,HEIGHT-25,10,textColor);
     text(generations,150,HEIGHT-25,10);
 
-    text("Age : ",10,HEIGHT-50,10);
+    text("Age : ",10,HEIGHT-50,10,textColor);
     text(age,75,HEIGHT-50,10);
 
     glFlush();

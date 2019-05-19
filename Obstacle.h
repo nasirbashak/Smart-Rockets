@@ -16,7 +16,7 @@ class Obstacle{
         int width;
         int height;
         Obstacle(int,int);
-        void show();
+        void show(char *message);
         void update();
         void move();
         void stop();
