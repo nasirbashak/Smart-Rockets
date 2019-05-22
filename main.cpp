@@ -131,6 +131,8 @@ void drawTargetPlanet(){
         glTranslatef(WIDTH/2,HEIGHT-50,0);    
         glColor3f(0.0,1.0,0.0);
         glutSolidTorus(15,10,60,200);
+        glColor3f(1.0,0.0,0.0);
+        glutSolidTorus(7,7,60,200);
     glPopMatrix();
 
 }
@@ -183,7 +185,7 @@ void text(int message,float x,float y, float z){
 
 }
 
-void text(char *message,float x,float y, float z,float *color){
+void text(char *message,float x,float y, float z,float *color,int size){
 
             
             glColor3fv(color);
@@ -193,8 +195,36 @@ void text(char *message,float x,float y, float z,float *color){
             glRasterPos2f(x, y);
            
             for(int i = 0; c[i] != '\0'; i++){
-		        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c[i]);
+                if(size ==18){
+		            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
+                }else{
+		            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c[i]);
+                }
             }
+
+}
+
+void drawNames(){
+    float nameR = mapp(255,0,255,0,1);
+    float nameG = mapp(255,0,255,0,1);
+    float nameB = mapp(255,0,255,0,1);
+
+    
+    float nameColor[] = {nameR,nameG,nameB};
+
+    float usnR = mapp(255,0,255,0,1);
+    float usnG = mapp(255,0,255,0,1);
+    float usnB = mapp(255,0,255,0,1);
+
+    
+    float usnColor[] = {usnR,usnG,usnB};
+
+
+    text("USN  : 1MV16CS053",5,5,0,nameColor,18);
+    text("NAME : M G N S Suma",5,25,0,nameColor,18);
+
+    text("USN  : 1MV16CS057",WIDTH-200,5,0,nameColor,18);
+    text("NAME : Nasir Basha K",WIDTH-200,25,0,nameColor,18);
 
 }
 
@@ -206,16 +236,17 @@ void draw(){
     drawEarth();
     drawTargetPlanet();
     glLineWidth(1);
+    drawNames();
     // drawTarget();
     //drawObstacle();
     rect.show("Smart Rockets");
     rect.update();
     population.show();
     float textColor[] = {1.0,1.0,1.0};
-    text("Generations : ",10,HEIGHT-25,10,textColor);
+    text("Generations : ",10,HEIGHT-25,10,textColor,0);
     text(generations,150,HEIGHT-25,10);
 
-    text("Age : ",10,HEIGHT-50,10,textColor);
+    text("Age : ",10,HEIGHT-50,10,textColor,0);
     text(age,75,HEIGHT-50,10);
 
     glFlush();
@@ -278,6 +309,22 @@ void myMenu(int option){
 
 }
 
+void reshape(int w,int h){
+
+    glViewport(0,0,w,h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    if(w<=h){
+        // glOrtho(0,1000,0,600,100,-100);
+        glOrtho(-1000,1000*h/w,-700,700*h/w,100,-100);
+    }else{
+        glOrtho(-1000,1000*w/h,-700,700*w/h,100,-100);
+
+    }
+    glMatrixMode(GL_MODELVIEW);
+
+}
+
 int main(int argc , char ** args){
 
     glutInit(&argc,args);
@@ -295,7 +342,7 @@ int main(int argc , char ** args){
     glutAddMenuEntry("Move Obstacle",3);
     glutAddMenuEntry("Stop Obstacle",4);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
-
+   // glutReshapeFunc(reshape);
     glutMainLoop();
 
 } 

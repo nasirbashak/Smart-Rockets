@@ -3,7 +3,7 @@
 int WIDTH = 1000;
 int HEIGHT = 600;
 
-extern void text(char *message,float x,float y, float z,float *color);
+extern void text(char *message,float x,float y, float z,float *color,int size);
 
 Obstacle :: Obstacle(int x,int y){
     this->x=x;
@@ -27,8 +27,7 @@ void Obstacle:: show(char *message){
     float bodyG = mappp(179,0,255,0,1);
     float bodyB = mappp(0,0,255,0,1); 
    
-    float textColor[] = {1.0,1.0,1.0};
-    text(message,this->x,this->y-(this->height),0,textColor);
+   
     
     glColor3f(bodyR,bodyG,bodyB);
     glBegin(GL_QUADS);
@@ -37,6 +36,9 @@ void Obstacle:: show(char *message){
         glVertex2f(this->x+(this->width)  ,   this->y-(this->height));
         glVertex2f(this->x+(this->width)  ,   this->y);
     glEnd();
+
+     float textColor[] = {1.0,1.0,1.0};
+    text(message,this->x+30,this->y-(this->height),0,textColor,0);
 
 }
 
