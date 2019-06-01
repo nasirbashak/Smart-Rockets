@@ -77,6 +77,7 @@ void init(){
     target.add(500,550);
     population.init();
     createSpace();
+    
 
     //PlaySound(TEXT("recycle.wav"), NULL, SND_FILENAME);
    // PlaySound("audio.mp4",NULL,SND_FILENAME);
@@ -195,7 +196,7 @@ void text(char *message,float x,float y, float z,float *color,int size){
             glRasterPos2f(x, y);
            
             for(int i = 0; c[i] != '\0'; i++){
-                if(size ==18){
+                if(size == 18){
 		            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c[i]);
                 }else{
 		            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c[i]);
@@ -239,6 +240,7 @@ void draw(){
     drawNames();
     // drawTarget();
     //drawObstacle();
+    
     rect.show("Smart Rockets");
     rect.update();
     population.show();
@@ -316,9 +318,9 @@ void reshape(int w,int h){
     glLoadIdentity();
     if(w<=h){
         // glOrtho(0,1000,0,600,100,-100);
-        glOrtho(-1000,1000*h/w,-700,700*h/w,100,-100);
+        glOrtho(0,1000*h/w,0,700*h/w,100,-100);
     }else{
-        glOrtho(-1000,1000*w/h,-700,700*w/h,100,-100);
+        glOrtho(0,1000*w/h,0,700*w/h,100,-100);
 
     }
     glMatrixMode(GL_MODELVIEW);
